@@ -1,6 +1,8 @@
 import heapq
 from constants import *
 
+global grid
+
 def is_blocked(point, grid):
     if not (0 <= point[0] < GRID_SIZE and 0 <= point[1] < GRID_SIZE):
         return True  # Treat out-of-bounds as blocked
@@ -95,7 +97,9 @@ def bfs(start, end, grid):
 
     return None, "No path found!"
 
-def bidirectional_a_star(start, end, grid):
+def bidirectional_a_star(start, end):
+    global grid
+    
     if is_blocked(start, grid) or is_blocked(end, grid):
         return None, "Start or End point is blocked!"
         
@@ -142,6 +146,11 @@ def bidirectional_a_star(start, end, grid):
                         f_score_fwd[neighbor_fwd] = tentative_g_score + heuristic(neighbor_fwd, end)
                         heapq.heappush(open_set_fwd, (f_score_fwd[neighbor_fwd], neighbor_fwd))
 
+            if grid[current_fwd[0]][current_fwd[1]] != 2:
+                grid[current_fwd[0]][current_fwd[1]] = 5
+            draw_grid()
+            pygame.time.wait(50)
+
         else:
             _, current_bwd = heapq.heappop(open_set_bwd)
 
@@ -160,6 +169,11 @@ def bidirectional_a_star(start, end, grid):
                         g_score_bwd[neighbor_bwd] = tentative_g_score
                         f_score_bwd[neighbor_bwd] = tentative_g_score + heuristic(neighbor_bwd, start)
                         heapq.heappush(open_set_bwd, (f_score_bwd[neighbor_bwd], neighbor_bwd))
+
+            if grid[current_bwd[0]][current_bwd[1]] != 2:
+                grid[current_bwd[0]][current_bwd[1]] = 6
+            draw_grid()
+            pygame.time.wait(50)
 
     if meeting_point:
         path_fwd = reconstruct_path(came_from_fwd, meeting_point)

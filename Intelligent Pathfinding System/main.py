@@ -9,6 +9,7 @@ def main():
     screen = pygame.display.set_mode((WINDOW_SIZE, WINDOW_SIZE))
     pygame.display.set_caption("Pathfinding Visualizer")
 
+    global grid
     grid = initialize_grid()
     start = (0, 0)
     end = (GRID_SIZE - 1, GRID_SIZE - 1)
@@ -41,7 +42,11 @@ def main():
                     message = None
                 
                 elif event.key == pygame.K_SPACE and algorithm:
-                    path_result = algorithm(start, end, grid)
+                    if algo_name == 'Bidirectional A*':
+                        path_result = algorithm(start, end)
+                    else:
+                        path_result = algorithm(start, end, grid)
+                    
                     path, msg = path_result
                     if msg:
                         message = msg
