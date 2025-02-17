@@ -71,3 +71,26 @@ def dijkstra(start, end, grid):
                     heapq.heappush(open_set, (g_score[neighbor], neighbor))
 
     return None, "No path found!"
+
+def bfs(start, end, grid):
+    if is_blocked(start, grid) or is_blocked(end, grid):
+        return None, "Start or End point is blocked!"
+        
+    queue = [start]
+    came_from = {}
+    visited = set()
+    visited.add(start)
+
+    while queue:
+        current = queue.pop(0)
+        if current == end:
+            return reconstruct_path(came_from, current), None
+
+        for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+            neighbor = (current[0] + dx, current[1] + dy)
+            if 0 <= neighbor[0] < GRID_SIZE and 0 <= neighbor[1] < GRID_SIZE and grid[neighbor[0]][neighbor[1]] != 1 and neighbor not in visited:
+                came_from[neighbor] = current
+                visited.add(neighbor)
+                queue.append(neighbor)
+
+    return None, "No path found!"
