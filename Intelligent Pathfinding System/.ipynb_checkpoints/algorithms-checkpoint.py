@@ -45,3 +45,29 @@ def a_star(start, end, grid):
                     heapq.heappush(open_set, (f_score[neighbor], neighbor))
 
     return None, "No path found!"
+
+def dijkstra(start, end, grid):
+    if is_blocked(start, grid) or is_blocked(end, grid):
+        return None, "Start or End point is blocked!"
+        
+    open_set = []
+    heapq.heappush(open_set, (0, start))
+    came_from = {}
+    g_score = { (i, j): float('inf') for i in range(GRID_SIZE) for j in range(GRID_SIZE) }
+    g_score[start] = 0
+
+    while open_set:
+        _, current = heapq.heappop(open_set)
+        if current == end:
+            return reconstruct_path(came_from, current), None
+
+        for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+            neighbor = (current[0] + dx, current[1] + dy)
+            if 0 <= neighbor[0] < GRID_SIZE and 0 <= neighbor[1] < GRID_SIZE and grid[neighbor[0]][neighbor[1]] != 1:
+                tentative_g_score = g_score[current] + 1
+                if tentative_g_score < g_score[neighbor]:
+                    came_from[neighbor] = current
+                    g_score[neighbor] = tentative_g_score
+                    heapq.heappush(open_set, (g_score[neighbor], neighbor))
+
+    return None, "No path found!"
