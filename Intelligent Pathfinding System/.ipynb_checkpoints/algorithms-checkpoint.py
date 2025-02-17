@@ -1,6 +1,5 @@
 import heapq
 from constants import *
-from grid_utils import draw_grid
 
 def is_blocked(point, grid):
     if not (0 <= point[0] < GRID_SIZE and 0 <= point[1] < GRID_SIZE):
